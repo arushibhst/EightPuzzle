@@ -1,0 +1,11 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Compiled Java files
+*.class
+out/
+build/
+
+# Mac junk
+.DS_Store
