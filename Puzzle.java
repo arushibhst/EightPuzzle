@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Puzzle{
+public class Puzzle implements Comparable<Puzzle>{
     private int[][] puz;
     private int[][] goalPuz;
     int gn;
@@ -18,6 +18,25 @@ public class Puzzle{
         this.hn = hn;
         this.fn = gn + hn;
     }
+
+    /** internal structure of class */
+    @Override
+    public int compareTo(Puzzle other){ // for comparable function
+        return Integer.compare(this.fn, other.fn); // comparing fn
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(!(o instanceof Puzzle)) return false;
+        Puzzle other = (Puzzle) o;
+        return Arrays.deepEquals(this.puz, other.puz); // checking that both the puzzle grids are equal
+    }
+
+    @Override
+    public int hashCode(){
+        return Arrays.deepHashCode(puz);
+    }
     
     /** Getters and Setters */
     public int[][] puz(){return puz;}
@@ -25,16 +44,29 @@ public class Puzzle{
     public int hn(){ return hn;}
     public int gn(){ return gn;}
     public int fn(){ return fn;}
+
+    /** Print methods */
     public void printPuzzle(){
+        System.out.println("state:");
         for(int[] row : puz){
             System.out.println(Arrays.toString(row));
         }
+        System.out.println("fn for this state: " + fn);
+        System.out.println("gn for this state: " + gn);
+        System.out.println("hn for this state: " + hn);
+        System.out.println(" ");
     }
 
-    /** Print methods */
+    public void printStart(){
+        for(int[] row : puz){
+            System.out.println(Arrays.toString(row));
+        }
+        System.out.println(" ");
+    }
+
     public void printNeighbours(){
         List<int[]> neighbours = findNeighbours();
-        System.out.println("neighbour size: " + neighbours.size());
+        System.out.println("number of neighbours: " + neighbours.size());
         for (int[] neigh : neighbours) {
             int row = neigh[0];
             int col = neigh[1];
@@ -44,15 +76,21 @@ public class Puzzle{
 
     /** Neighbour search and puzzle movement */
     public Puzzle move(int neighRow, int neighCol, int neighbour){
+        int[][] newGrid = new int[3][3];
+        for(int i = 0; i < 3; i++) // deep copy of the current puzzle
+            newGrid[i] = Arrays.copyOf(puz[i], puz[i].length);
+
         int row = findZeroRow();
         int col = findZeroCol();
-        Puzzle newPuz = new Puzzle(puz, 0, 0);
-        int[][] currPuz = newPuz.puz();
-        currPuz[row][col] = neighbour;
-        currPuz[neighRow][neighCol] = 0;
-        calcGn();
+        newGrid[row][col] = neighbour;
+        newGrid[neighRow][neighCol] = 0;
+
+        int newGn = gn + 1; // adding incremented gn to new state
+        Puzzle newPuz = new Puzzle(newGrid, newGn, 0);
+        newPuz.fn = newPuz.calcFn();
         return newPuz;
     }
+
     public int findZeroRow(){
         if(puz == null || puz.length == 0){throw new IllegalArgumentException();}
         int found = 10;
@@ -86,27 +124,37 @@ public class Puzzle{
         if (col - 1 >= 0) neighbours.add(new int[]{row, col - 1});   // left
         return neighbours;
     }
-    /** Evaluation function for A star */
-    public int calcGn(){
-        gn++;
-        return gn;
+    /** creates puzzle objects for the neighbours */
+    public List<Puzzle> createNeighbours() {
+        List<int[]> neighbours = findNeighbours();
+        List<Puzzle> nPuzzles = new ArrayList<>();
+        for(int[] pair : neighbours){
+            int row = pair[0];
+            int col = pair[1];
+            Puzzle p = move(pair[0], pair[1], puz[row][col]);
+            nPuzzles.add(p);
+        }
+        return nPuzzles;
     }
+    /** Evaluation function for A star */
     public int calcHn(){
         int tempHn = 0;
         // calculate misplaced tiles between current puzzle and goal
         for(int row = 0; row < 3; row++){
             for(int col = 0; col < 3; col++){
-                if(goalPuz[row][col] == puz[row][col]) tempHn++;
+                if( (goalPuz[row][col] != puz[row][col]) && (puz[row][col] != 0)){
+                    tempHn++;
+                }
             }
         }
+        // hn = tempHn;
         return tempHn;
     }
 
     public int calcFn(){
-        System.out.println("gn: " + gn);
-        System.out.println("hn: " + hn);
-        System.out.println("fn: " + fn);
-        return hn + gn;
+        this.hn = calcHn();       // recalculate hn fresh
+        this.fn = this.hn + this.gn;
+        return fn;
     }
 
     public static int calcHnStart(){
@@ -124,7 +172,7 @@ public class Puzzle{
         // calculate misplaced tiles between current puzzle and goal
         for(int row = 0; row < 3; row++){
             for(int col = 0; col < 3; col++){
-                if(goal[row][col] != start[row][col]) tempHn++;
+                if((goal[row][col] != start[row][col]) && (start[row][col] != 0)) tempHn++;
             }
         }
         return tempHn;
