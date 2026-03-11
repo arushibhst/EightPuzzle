@@ -56,9 +56,9 @@ public class Puzzle implements Comparable<Puzzle>{
         for(int[] row : puz){
             System.out.println(Arrays.toString(row));
         }
-        System.out.println("fn for this state: " + fn);
-        System.out.println("gn for this state: " + gn);
-        System.out.println("hn for this state: " + hn);
+        System.out.println("f for this state: " + fn);
+        System.out.println("g for this state: " + gn);
+        System.out.println("h for this state: " + hn);
         System.out.println(" ");
     }
 
