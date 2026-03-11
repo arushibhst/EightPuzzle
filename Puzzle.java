@@ -1,4 +1,5 @@
 import java.util.*;
+import java.lang.Math;
 
 public class Puzzle implements Comparable<Puzzle>{
     private int[][] puz;
@@ -6,6 +7,7 @@ public class Puzzle implements Comparable<Puzzle>{
     int gn;
     int hn;
     int fn;
+    boolean isManhat;
 
     public Puzzle(int[][] grid, int gn, int hn){
         this.goalPuz = new int[][]{
@@ -39,6 +41,9 @@ public class Puzzle implements Comparable<Puzzle>{
     }
     
     /** Getters and Setters */
+    public void setManhat(boolean set){
+        isManhat = set;
+    }
     public int[][] puz(){return puz;}
     public int[][] goalPuz(){return goalPuz;}
     public int hn(){ return hn;}
@@ -147,35 +152,46 @@ public class Puzzle implements Comparable<Puzzle>{
                 }
             }
         }
-        // hn = tempHn;
+        hn = tempHn;
         return tempHn;
     }
 
     public int calcFn(){
-        this.hn = calcHn();       // recalculate hn fresh
-        this.fn = this.hn + this.gn;
+        if(isManhat){
+            hn = calcManhat();
+        }
+        else{
+            hn = calcHn();
+        }
+        fn = hn + gn;
         return fn;
     }
 
-    public static int calcHnStart(){
-        int tempHn = 0;
-        int[][] start = new int[][]{
-                {2, 8, 3},
-                {1, 6, 4},
-                {7, 0, 5}
-        };
-        int[][] goal = new int[][]{
-                {1, 2, 3},
-                {8, 0, 4},
-                {7, 6, 5}
-        };
-        // calculate misplaced tiles between current puzzle and goal
+    public int[] findValue(int value){
+        int[] pair = new int[2];
         for(int row = 0; row < 3; row++){
             for(int col = 0; col < 3; col++){
-                if((goal[row][col] != start[row][col]) && (start[row][col] != 0)) tempHn++;
+                if( goalPuz[row][col] == value){
+                    pair[0] = row;
+                    pair[1] = col;
+                }
             }
         }
-        return tempHn;
+        return pair;
+    }
+
+    public int calcManhat(){
+        int manhat = 0;
+        for(int row = 0; row < 3; row++){
+            for(int col = 0; col < 3; col++){
+                if(puz[row][col] != 0){
+                    int[] pair = findValue(puz[row][col]);
+                    manhat += Math.abs(pair[0]-row) + Math.abs(pair[1]-col);
+                }
+            }
+        }
+        hn = manhat;
+        return manhat;
     }
 }
 
