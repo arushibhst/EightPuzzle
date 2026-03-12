@@ -83,9 +83,11 @@ public class Astar{
         System.out.println(" ");
         System.out.println("Welcome to the eight puzzle problem! " +
                 "In this puzzle you slide a number tile to the blank space (represented by 0).");
-        System.out.println("Would you like the path to be calculated with the Misplaced Tiles heuristic (yes/no)?: ");
+        System.out.println("Would you like the path to be calculated with the Misplaced Tiles heuristic? If not, the " +
+                "Manhattan Distance heuristic will be used. (yes/no)?: ");
         String input = scan.nextLine().trim().toLowerCase();
         if (input.equals("yes") || input.equals("y") || input.equals("true")) {
+            System.out.println("Using Misplaced Tiles Heuristics");
             Astar a = new Astar(false);
             a.printInfo();
             a.aStar();
