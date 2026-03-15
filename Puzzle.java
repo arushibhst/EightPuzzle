@@ -79,7 +79,7 @@ public class Puzzle implements Comparable<Puzzle>{
         }
     }
 
-    /** Neighbour search and puzzle movement */
+    /** Move a tile to the blank tile */
     public Puzzle move(int neighRow, int neighCol, int neighbour){
         int[][] newGrid = new int[3][3];
         for(int i = 0; i < 3; i++) // deep copy of the current puzzle
@@ -95,7 +95,7 @@ public class Puzzle implements Comparable<Puzzle>{
         newPuz.fn = newPuz.calcFn();
         return newPuz;
     }
-
+    /** find the row the blank tile is in */
     public int findZeroRow(){
         if(puz == null || puz.length == 0){throw new IllegalArgumentException();}
         int found = 10;
@@ -107,6 +107,7 @@ public class Puzzle implements Comparable<Puzzle>{
         }
         return found;
     }
+    /** find the column the blank tile is in */
     public int findZeroCol(){
         if(puz == null || puz.length == 0){throw new IllegalArgumentException();}
         int found = 10;
@@ -141,7 +142,7 @@ public class Puzzle implements Comparable<Puzzle>{
         }
         return nPuzzles;
     }
-    /** Evaluation function for A star */
+    /** Calculate the Misplaced Tiles heuristic for the Evaluation function */
     public int calcHn(){
         int tempHn = 0;
         // calculate misplaced tiles between current puzzle and goal
@@ -155,7 +156,7 @@ public class Puzzle implements Comparable<Puzzle>{
         hn = tempHn;
         return tempHn;
     }
-
+    /** Calculate the evaluation function for A star */
     public int calcFn(){
         if(isManhat){
             hn = calcManhat();
@@ -166,7 +167,7 @@ public class Puzzle implements Comparable<Puzzle>{
         fn = hn + gn;
         return fn;
     }
-
+    /** find the row and column a specific tile is in */
     public int[] findValue(int value){
         int[] pair = new int[2];
         for(int row = 0; row < 3; row++){
@@ -179,7 +180,7 @@ public class Puzzle implements Comparable<Puzzle>{
         }
         return pair;
     }
-
+    /** Calculate the Manhattan Distance heuristic for the Evaluation function */
     public int calcManhat(){
         int manhat = 0;
         for(int row = 0; row < 3; row++){
