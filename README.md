@@ -1,5 +1,6 @@
 # EightPuzzle
 ## How to run:
+* Make sure Java is installed on your machine
 * Compile: javac AStar.java
 * Run: java AStar
 * The program allows the path to be calculated with the Misplaced Tiles heuristic or the Manhattan Distance heuristic in the evaluation function. It will ask you if you want the path to be found with the misplaced tiles heuristic.
