@@ -30,7 +30,11 @@ public class Astar{
     }
     public PriorityQueue<Puzzle> fringe(){return fringe;}
 
+    /** Constructs the path calculated by the A star function by finding the backpointer (parent nodes)
+     * and returning the reversed collection.
+     */
     public List<Puzzle> constructPath(Puzzle goal){
+     if(visited.isEmpty() || visited == null){throw new IllegalArgumentException();}
         List<Puzzle> path = new ArrayList<>();
         // when we find goal we call this method, this is why the current puzzle is the goal
         Puzzle current = goal;
@@ -48,11 +52,16 @@ public class Astar{
         return path;
     }
 
+    /** Calculate the optimal path from the initial state to the goal state using the Misplaced tiles
+     * heuristic or the Manhattan distance heuristic in the evaluation function. This is done by ordering
+     * successor states in ascending order on the priority queue.
+     */
     public void aStar(){
+        if(fringe == null || visited == null){throw new IllegalArgumentException();}
         fringe.offer(startPuz);
         visited.put(startPuz, null);
         while(!fringe.isEmpty()){
-            if(fringe.isEmpty()){throw new IllegalArgumentException(); }
+            if(fringe.isEmpty()){throw new IllegalArgumentException();}
             Puzzle curPuzz = fringe.poll();
             if( curPuzz.equals(goalPuz)  ){
                 constructPath(curPuzz);
@@ -67,7 +76,7 @@ public class Astar{
             }
         }
     }
-
+    /** Prints initial introduction */
     public void printInfo(){
         System.out.println("We want to reach from this initial state: ");
         startPuz.printStart();
