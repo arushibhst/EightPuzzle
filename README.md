@@ -102,7 +102,7 @@ f for this state: 4 <br>
 g for this state: 1 <br>
 h for this state: 3
 
-state:
+state: <br>
 [2, 0, 3] <br>
 [1, 8, 4] <br>
 [7, 6, 5] <br>
