@@ -26,7 +26,6 @@ state: <br>
 [2, 8, 3] <br>
 [1, 6, 4] <br>
 [7, 0, 5] <br>
-
 f for this state: 4 <br>
 g for this state: 0 <br>
 h for this state: 4
